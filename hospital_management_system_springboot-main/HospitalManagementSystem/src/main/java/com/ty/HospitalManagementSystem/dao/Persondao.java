@@ -1,10 +1,12 @@
 package com.ty.HospitalManagementSystem.dao;
 
+import com.ty.HospitalManagementSystem.dto.Person;
+import com.ty.HospitalManagementSystem.repo.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.ty.HospitalManagementSystem.dto.Person;
-import com.ty.HospitalManagementSystem.repo.PersonRepo;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class Persondao {
@@ -18,32 +20,22 @@ public class Persondao {
 	}
 
 	public Person updatePerson(int id, Person person) {
-		if (repo.findById(id).isPresent()) {
-			person.setId(id);
-			return repo.save(person);
-		} else {
-			return null;
-		}
+
+		return repo.save(person);
 
 	}
 
-	public Person deletePerson(int id) {
-		if (repo.findById(id).isPresent()) {
-			Person person = repo.findById(id).get();
-			repo.deleteById(id);
-			return person;
-		} else {
-			return null;
-		}
+	public Person deletePerson(Person person) {
+		repo.delete(person);
+		return person;
+	}
+
+	public Optional<Person> getpersonbyid(int id) {
+		return repo.findById(id);
 
 	}
 
-	public Person getpersonbyid(int id) {
-		if (repo.findById(id).isPresent()) {
-			return repo.findById(id).get();
-		} else {
-			return null;
-		}
-
+	public List<Person> getAllPerson() {
+		return repo.findAll();
 	}
 }

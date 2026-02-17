@@ -9,6 +9,7 @@ import com.ty.HospitalManagementSystem.dto.Address;
 import com.ty.HospitalManagementSystem.repo.AddressRepo;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class Addressdao {
@@ -20,32 +21,24 @@ public class Addressdao {
 		return addressRepo.save(address);
 		
 	}
-	public Address updateAddress(int id,Address address) {
-		if(addressRepo.findById(id).isPresent()) {
-			address.setId(id);
-			return addressRepo.save(address);
-		}else {
-			return null;
-		}
-		
+	public Optional<Address> updateAddress(int id,Address address) {
+		return addressRepo.findById(id).map(existingAddress->
+		{
+			existingAddress.setState(address.getState());
+			existingAddress.setCity(address.getCity());
+			existingAddress.setPincode(address.getPincode());
+			return addressRepo.save(existingAddress);
+		});
 	}
-	public Address deleteAddress(int id) {
-		if(addressRepo.findById(id).isPresent()) {
-			Address address=addressRepo.findById(id).get();
-			addressRepo.deleteById(id);
+	public Optional<Address> deleteAddress(int id) {
+		return addressRepo.findById(id).map(address->{
+			addressRepo.delete(address);
 			return address;
-		}else {
-			return null;
-		}
+		});
 		
 	}
-	public Address getaddressbyid(int id) {
-		if(addressRepo.findById(id).isPresent()) {
-			return addressRepo.findById(id).get();
-			
-		}else {
-			return null;
-		}
+	public Optional<Address> getaddressbyid(int id) {
+		return addressRepo.findById(id);
 		
 	}
 

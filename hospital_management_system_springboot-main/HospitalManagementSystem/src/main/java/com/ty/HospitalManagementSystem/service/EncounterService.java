@@ -29,10 +29,10 @@ public class EncounterService {
 	private Branchdao branchdao;
 
 	public ResponseEntity<ResponseStructure<Encounter>> saveEncounter(Encounter encounter, int pid, int bid) {
-		Person person = persondao.getpersonbyid(pid);
+	//	Person person = persondao.getpersonbyid(pid);
 		Branch branch = branchdao.getbranchbyid(bid);
 
-		encounter.setPerson(person);
+	//	encounter.setPerson(person);
 		List<Branch> list = new ArrayList<>();
 		list.add(branch);
 		encounter.setList(list);

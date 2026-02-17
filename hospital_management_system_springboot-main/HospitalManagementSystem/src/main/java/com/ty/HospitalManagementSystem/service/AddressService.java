@@ -1,5 +1,6 @@
 package com.ty.HospitalManagementSystem.service;
 
+import com.ty.HospitalManagementSystem.exception.IdNotFoundException;
 import com.ty.HospitalManagementSystem.util.ResponseStructure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,40 +22,20 @@ public class AddressService {
 		
 	}
 	public Address updateAddress(int id,Address address) {
-		Address dbaddress=addressdao.updateAddress(id, address);
-		if(dbaddress!=null) {
-			return dbaddress;
-		}else {
-			return null;
-		}
-		
+		return addressdao.updateAddress(id,address)
+				.orElseThrow(()->new IdNotFoundException("Address not found for the Id"+id));
 	}
 	public Address deleteAddress(int id) {
-		Address address=addressdao.deleteAddress(id);
-		if(address!=null) {
-			return address;
-		}else {
-			return null;
-		}
+		return addressdao.deleteAddress(id)
+				.orElseThrow(()->new IdNotFoundException("Address not found for the Id"+id));
 		
 	}
 	public Address getaddressbyid(int id) {
-		Address address=addressdao.getaddressbyid(id);
-		if(address!=null) {
-			return address;
-		
-	}else {
-		return null;
-	}
+		return addressdao.getaddressbyid(id)
+				.orElseThrow(()->new IdNotFoundException("Address not found for the Id"+id));
 	}
 
-	public ResponseStructure<List<Address>> getAllAddress() {
-		List<Address> list=addressdao.getAllAddress();
-		ResponseStructure<List<Address>>response=new ResponseStructure<>();
-		response.setMessage("List of all products");
-		response.setStatus(HttpStatus.OK.value());
-		response.setData(list);
-
-		return response;
+	public List<Address> getAllAddress() {
+		return addressdao.getAllAddress();
 	}
 }

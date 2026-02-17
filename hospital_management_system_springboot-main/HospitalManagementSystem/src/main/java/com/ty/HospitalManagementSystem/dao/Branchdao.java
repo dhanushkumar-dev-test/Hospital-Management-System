@@ -26,8 +26,8 @@ public class Branchdao {
 	public Branch saveBranch(int hid, int aid, Branch branch) {
 		Hospital hospital = hospitalDao.gethospitalbyid(hid);
 		branch.setHospital(hospital);
-		Address address = addressdao.getaddressbyid(aid);
-		branch.setAddress(address);
+	//	Address address = addressdao.getaddressbyid(aid);
+	//	branch.setAddress(address);
 		return branchRepo.save(branch);
 
 	}

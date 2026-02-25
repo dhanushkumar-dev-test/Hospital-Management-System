@@ -1,15 +1,10 @@
 package com.ty.HospitalManagementSystem.dao;
 
 
-import java.util.List;
-
+import com.ty.HospitalManagementSystem.dto.Branch;
+import com.ty.HospitalManagementSystem.repo.BranchRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.ty.HospitalManagementSystem.dto.Address;
-import com.ty.HospitalManagementSystem.dto.Branch;
-import com.ty.HospitalManagementSystem.dto.Hospital;
-import com.ty.HospitalManagementSystem.repo.BranchRepo;
 
 @Repository
 public class Branchdao {
@@ -24,8 +19,8 @@ public class Branchdao {
 	private Addressdao addressdao;
 
 	public Branch saveBranch(int hid, int aid, Branch branch) {
-		Hospital hospital = hospitalDao.gethospitalbyid(hid);
-		branch.setHospital(hospital);
+	//	Hospital hospital = hospitalDao.gethospitalbyid(hid);
+	//	branch.setHospital(hospital);
 	//	Address address = addressdao.getaddressbyid(aid);
 	//	branch.setAddress(address);
 		return branchRepo.save(branch);
@@ -65,9 +60,9 @@ public class Branchdao {
 
 	}
 
-	public List<Branch> getbranchbyhospitalid(int hid) {
-		Hospital hospital = hospitalDao.gethospitalbyid(hid);
-		return branchRepo.findBranchByHospitalId(hospital);
-
-	}
+//	public List<Branch> getbranchbyhospitalid(int hid) {
+//		//Hospital hospital = hospitalDao.gethospitalbyid(hid);
+//		//return branchRepo.findBranchByHospitalId(hospital);
+//
+//	}
 }

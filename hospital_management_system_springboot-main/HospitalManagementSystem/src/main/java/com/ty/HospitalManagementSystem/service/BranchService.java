@@ -1,12 +1,9 @@
 package com.ty.HospitalManagementSystem.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.ty.HospitalManagementSystem.dao.Branchdao;
 import com.ty.HospitalManagementSystem.dto.Branch;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BranchService {
@@ -49,13 +46,13 @@ public class BranchService {
 
 	}
 
-	public List<Branch> getbranchbyhospitalid(int hid) {
-		List<Branch> branchs = branchdao.getbranchbyhospitalid(hid);
-		if (branchs != null) {
-			return branchs;
-		} else {
-			return null;
-		}
+//	public List<Branch> getbranchbyhospitalid(int hid) {
+//		List<Branch> branchs = branchdao.getbranchbyhospitalid(hid);
+//		if (branchs != null) {
+//			return branchs;
+//		} else {
+//			return null;
+//		}
 
 	}
-}
+

@@ -1,16 +1,18 @@
 package com.ty.HospitalManagementSystem.service;
 
 import com.ty.HospitalManagementSystem.dao.Addressdao;
+import com.ty.HospitalManagementSystem.dao.Persondao;
 import com.ty.HospitalManagementSystem.dto.Address;
+import com.ty.HospitalManagementSystem.dto.Person;
 import com.ty.HospitalManagementSystem.exception.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.ty.HospitalManagementSystem.dao.Persondao;
-import com.ty.HospitalManagementSystem.dto.Person;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PersonService {
@@ -78,7 +80,23 @@ public class PersonService {
 						new IdNotFoundException("Person not found with id " + id));
 	}
 
-	public List<Person> getAllPerson() {
-		return persondao.getAllPerson();
+	public List<Person> getAllPersons(int page, int size, String direction) {
+		Sort sort = direction.equalsIgnoreCase("desc")?
+				Sort.by("name").descending():
+				Sort.by("name").ascending();
+
+		Pageable pageable= PageRequest.of(page,size,sort);
+		Page<Person> personPage=persondao.getAllPerson(pageable);
+
+		if (personPage.isEmpty()) {
+			throw new IdNotFoundException("No persons found");
+		}
+
+		return personPage.getContent();
+
 	}
-}
+	}
+
+
+
+

@@ -3,7 +3,11 @@ package com.ty.HospitalManagementSystem.controller;
 import com.ty.HospitalManagementSystem.dto.Person;
 import com.ty.HospitalManagementSystem.service.PersonService;
 import com.ty.HospitalManagementSystem.util.ResponseStructure;
-import io.swagger.annotations.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,20 +18,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/persons")
-@Api(tags = "Person Management API", description = "Operations related to Person entity")
+@Tag(name = "Person Management API", description = "Operations related to Person entity")
 public class PersonController {
 
 	@Autowired
 	private PersonService service;
 
 	@PostMapping
-	@ApiOperation(value = "Save Person", notes = "Creates a new person with optional address mapping")
-	@ApiResponses({
-			@ApiResponse(code = 201, message = "Person created successfully"),
-			@ApiResponse(code = 400, message = "Invalid request body")
-	})
+	@Operation(summary = "Save Person", description = "Creates a new person with optional address mapping")
+	@ApiResponse(responseCode = "201", description = "Person created successfully")
+	@ApiResponse(responseCode = "400", description = "Invalid request body")
 	public ResponseEntity<ResponseStructure<Person>> savePerson(
-			@ApiParam(value = "Person object to be created", required = true)
+			@Parameter(description = "Person object to be created", required = true)
 			@RequestBody Person person) {
 
 		Person savedPerson = service.savePerson(person);
@@ -41,16 +43,14 @@ public class PersonController {
 	}
 
 	@PutMapping("/{id}")
-	@ApiOperation(value = "Update Person", notes = "Updates person details using ID")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Person updated successfully"),
-			@ApiResponse(code = 404, message = "Person not found")
-	})
+	@Operation(summary = "Update Person", description = "Updates person details using ID")
+	@ApiResponse(responseCode = "200", description = "Person updated successfully")
+	@ApiResponse(responseCode = "404", description = "Person not found")
 	public ResponseEntity<ResponseStructure<Person>> updatePerson(
-			@ApiParam(value = "Person ID", required = true)
+			@Parameter(description = "Person ID", required = true)
 			@PathVariable int id,
 
-			@ApiParam(value = "Updated person object", required = true)
+			@Parameter(description = "Updated person object", required = true)
 			@RequestBody Person person) {
 
 		Person updatedPerson = service.updatePerson(id, person);
@@ -64,13 +64,11 @@ public class PersonController {
 	}
 
 	@DeleteMapping("/{id}")
-	@ApiOperation(value = "Delete Person", notes = "Deletes a person by ID")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Person deleted successfully"),
-			@ApiResponse(code = 404, message = "Person not found")
-	})
+	@Operation(summary = "Delete Person", description = "Deletes a person by ID")
+	@ApiResponse(responseCode = "200", description = "Person deleted successfully")
+	@ApiResponse(responseCode = "404", description = "Person not found")
 	public ResponseEntity<ResponseStructure<Person>> deletePerson(
-			@ApiParam(value = "Person ID", required = true)
+			@Parameter(description = "Person ID", required = true)
 			@PathVariable int id) {
 
 		Person deletedPerson = service.deletePerson(id);
@@ -84,13 +82,11 @@ public class PersonController {
 	}
 
 	@GetMapping("/{id}")
-	@ApiOperation(value = "Get Person By ID", notes = "Fetch a person using ID")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Person fetched successfully"),
-			@ApiResponse(code = 404, message = "Person not found")
-	})
+	@Operation(summary = "Get Person By ID", description = "Fetch a person using ID")
+	@ApiResponse(responseCode = "200", description = "Person fetched successfully")
+	@ApiResponse(responseCode = "404", description = "Person not found")
 	public ResponseEntity<ResponseStructure<Person>> getPersonById(
-			@ApiParam(value = "Person ID", required = true)
+			@Parameter(description = "Person ID", required = true)
 			@PathVariable int id) {
 
 		Person person = service.getpersonbyid(id);
@@ -104,19 +100,31 @@ public class PersonController {
 	}
 
 	@GetMapping
-	@ApiOperation(value = "Get All Persons", notes = "Fetch all persons from database")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "All persons fetched successfully")
-	})
-	public ResponseEntity<ResponseStructure<List<Person>>> getAllPerson() {
+	@Operation(
+			summary = "Get all persons with pagination",
+			description = "Fetch persons using pagination. Sorted by name (ASC)"
+	)
+	@ApiResponse(responseCode = "200", description = "Persons fetched successfully")
+	@ApiResponse(responseCode = "404", description = "No persons found")
+	public ResponseEntity<ResponseStructure<List<Person>>> getAllPerson(
 
-		List<Person> person = service.getAllPerson();
+			@Parameter(description = "Page number (starts from 0)", example = "0")
+			@RequestParam(defaultValue = "0") int page,
+
+			@Parameter(description = "Number of records per page", example = "5")
+			@RequestParam(defaultValue = "5") int size ,
+
+			@Parameter(description = "Sort direction: asc or desc", example = "asc")
+			@RequestParam(defaultValue = "asc") String direction
+	) {
+
+		List<Person> persons = service.getAllPersons(page, size,direction);
 
 		ResponseStructure<List<Person>> response = new ResponseStructure<>();
-		response.setStatus(200);
-		response.setMessage("All Person fetched successfully");
-		response.setData(person);
+		response.setStatus(HttpStatus.OK.value());
+		response.setMessage("Persons fetched successfully");
+		response.setData(persons);
 
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return ResponseEntity.ok(response);
 	}
 }

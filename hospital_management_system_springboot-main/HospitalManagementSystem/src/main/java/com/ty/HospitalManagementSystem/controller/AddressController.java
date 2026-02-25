@@ -3,7 +3,12 @@ package com.ty.HospitalManagementSystem.controller;
 import com.ty.HospitalManagementSystem.dto.Address;
 import com.ty.HospitalManagementSystem.service.AddressService;
 import com.ty.HospitalManagementSystem.util.ResponseStructure;
-import io.swagger.annotations.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.Parameter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,20 +19,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/addresses")
-@Api(tags = "Address Management API", description = "Operations related to Address entity")
+@Tag(name = "Address Management API", description = "Operations related to Address entity")
 public class AddressController {
 
 	@Autowired
 	private AddressService service;
 
 	@PostMapping
-	@ApiOperation(value = "Save Address", notes = "Creates a new address record")
-	@ApiResponses({
-			@ApiResponse(code = 201, message = "Address created successfully"),
-			@ApiResponse(code = 400, message = "Invalid request body")
-	})
+	@Operation(summary = "Save Address", description = "Creates a new address record")
+	@ApiResponse(responseCode = "201", description = "Address created successfully")
+	@ApiResponse(responseCode = "400", description = "Invalid request body")
 	public ResponseEntity<ResponseStructure<Address>> saveAddress(
-			@ApiParam(value = "Address object to be created", required = true)
+			@Parameter(description = "Address object to be created", required = true)
 			@Valid @RequestBody Address address) {
 
 		Address savedAddress = service.saveAddress(address);
@@ -41,16 +44,14 @@ public class AddressController {
 	}
 
 	@PutMapping("/{id}")
-	@ApiOperation(value = "Update Address", notes = "Updates address by ID")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Address updated successfully"),
-			@ApiResponse(code = 404, message = "Address not found")
-	})
+	@Operation(summary = "Update Address", description = "Updates address by ID")
+	@ApiResponse(responseCode = "200", description = "Address updated successfully")
+	@ApiResponse(responseCode = "404", description = "Address not found")
 	public ResponseEntity<ResponseStructure<Address>> updateAddress(
-			@ApiParam(value = "Address ID", required = true)
+			@Parameter(description = "Address ID", required = true)
 			@PathVariable int id,
 
-			@ApiParam(value = "Updated address object", required = true)
+			@Parameter(description = "Updated address object", required = true)
 			@Valid @RequestBody Address address) {
 
 		Address updatedAddress = service.updateAddress(id, address);
@@ -64,13 +65,11 @@ public class AddressController {
 	}
 
 	@DeleteMapping("/{id}")
-	@ApiOperation(value = "Delete Address", notes = "Deletes address by ID")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Address deleted successfully"),
-			@ApiResponse(code = 404, message = "Address not found")
-	})
+	@Operation(summary = "Delete Address", description = "Deletes address by ID")
+	@ApiResponse(responseCode = "200", description = "Address deleted successfully")
+	@ApiResponse(responseCode = "404", description = "Address not found")
 	public ResponseEntity<ResponseStructure<Address>> deleteAddress(
-			@ApiParam(value = "Address ID", required = true)
+			@Parameter(description = "Address ID", required = true)
 			@PathVariable int id) {
 
 		Address deletedAddress = service.deleteAddress(id);
@@ -84,13 +83,11 @@ public class AddressController {
 	}
 
 	@GetMapping("/{id}")
-	@ApiOperation(value = "Get Address By ID", notes = "Fetch address using ID")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Address fetched successfully"),
-			@ApiResponse(code = 404, message = "Address not found")
-	})
+	@Operation(summary = "Get Address By ID", description = "Fetch address using ID")
+	@ApiResponse(responseCode = "200", description = "Address fetched successfully")
+	@ApiResponse(responseCode = "404", description = "Address not found")
 	public ResponseEntity<ResponseStructure<Address>> getAddressById(
-			@ApiParam(value = "Address ID", required = true)
+			@Parameter(description = "Address ID", required = true)
 			@PathVariable int id) {
 
 		Address address = service.getaddressbyid(id);
@@ -103,11 +100,9 @@ public class AddressController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@GetMapping
-	@ApiOperation(value = "Get All Addresses", notes = "Fetch all address records")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "All addresses fetched successfully")
-	})
+	@GetMapping("/getAllPersons")
+	@Operation(summary = "Get All Addresses", description = "Fetch all address records")
+	@ApiResponse(responseCode = "200", description = "All addresses fetched successfully")
 	public ResponseEntity<ResponseStructure<List<Address>>> getAllAddress() {
 
 		List<Address> addresses = service.getAllAddress();

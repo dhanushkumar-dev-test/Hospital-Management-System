@@ -1,13 +1,13 @@
 package com.ty.HospitalManagementSystem.dao;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.ty.HospitalManagementSystem.dto.Hospital;
 import com.ty.HospitalManagementSystem.repo.HospitalRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class HospitalDao {
@@ -17,48 +17,37 @@ public class HospitalDao {
 
 	public Hospital savehospital(Hospital hospital) {
 		return hospitalRepo.save(hospital);
-
 	}
 
-	public Hospital updatehospital(int id, Hospital hospital) {
-		if (hospitalRepo.findById(id).isPresent()) {
-			hospital.setId(id);
-			return hospitalRepo.save(hospital);
-		} else {
-			return null;
-		}
+	public Optional<Hospital> updatehospital(int id, Hospital hospital) {
+		return hospitalRepo.findById(id).map(existingHospital->
+		{
+			existingHospital.setName(hospital.getName());
+			existingHospital.setEmail(hospital.getEmail());
+			return hospitalRepo.save(existingHospital);
 
+		});
 	}
 
-	public Hospital deletehospital(int id) {
-		if (hospitalRepo.findById(id).isPresent()) {
-			Hospital hospital = hospitalRepo.findById(id).get();
-			hospitalRepo.deleteById(id);
+	public Optional<Hospital> deletehospital(int id) {
+		return hospitalRepo.findById(id).map(hospital->{
+			hospitalRepo.delete(hospital);
 			return hospital;
-		} else {
-			return null;
 
-		}
-
+		});
 	}
 
-	public Hospital gethospitalbyid(int id) {
-		Optional<Hospital> hospital=hospitalRepo.findById(id);
-		if(hospital.isPresent()) {
-			return hospital.get();
-		}else {
-			return null;
-		}
-
+	public Optional<Hospital> gethospitalbyid(int id) {
+		return hospitalRepo.findById(id);
 	}
 
-	public List<Hospital> getallHospitals() {
-		return hospitalRepo.findAll();
-
+	public Page<Hospital> getAllHospitals(Pageable pageable) {
+		return hospitalRepo.findAll(pageable);
 	}
 
-	public Hospital gethospitalbyemail(String email) {
-		return hospitalRepo.findhospitalbyemail(email);
-
+	public Optional<Hospital> gethospitalbyemail(String email) {
+		return Optional.ofNullable(hospitalRepo.findhospitalbyemail(email));
 	}
+
+
 }

@@ -1,16 +1,14 @@
 package com.ty.HospitalManagementSystem.controller;
 
-import javax.validation.Valid;
-
+import com.ty.HospitalManagementSystem.dto.Address;
+import com.ty.HospitalManagementSystem.service.AddressService;
 import com.ty.HospitalManagementSystem.util.ResponseStructure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.ty.HospitalManagementSystem.dto.Address;
-import com.ty.HospitalManagementSystem.service.AddressService;
-
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController

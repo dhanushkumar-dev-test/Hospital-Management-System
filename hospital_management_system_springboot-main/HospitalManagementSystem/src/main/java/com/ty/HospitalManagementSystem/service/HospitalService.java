@@ -1,17 +1,16 @@
 package com.ty.HospitalManagementSystem.service;
 
-import java.util.NoSuchElementException;
-
-import org.aspectj.weaver.NewConstructorTypeMunger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import com.ty.HospitalManagementSystem.dao.HospitalDao;
 import com.ty.HospitalManagementSystem.dto.Hospital;
 import com.ty.HospitalManagementSystem.exception.IdNotFoundException;
-import com.ty.HospitalManagementSystem.util.ResponseStructure;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class HospitalService {
@@ -19,64 +18,50 @@ public class HospitalService {
 	@Autowired
 	private HospitalDao dao;
 
-	public ResponseEntity<ResponseStructure<Hospital>> saveHospital(Hospital hospital) {
-		ResponseStructure<Hospital> responseStructure=new ResponseStructure<>();
-		responseStructure.setMessage("succesfully saved");
-		responseStructure.setStatus(HttpStatus.CREATED.value());
-		responseStructure.setData(dao.savehospital(hospital));
-		return new ResponseEntity<ResponseStructure<Hospital>>(responseStructure,HttpStatus.CREATED);
-
+	public Hospital saveHospital(Hospital hospital) {
+		return dao.savehospital(hospital);
 	}
 
-	public ResponseEntity<ResponseStructure<Hospital>> updateHospital(int id, Hospital hospital) {
-		Hospital dbhospital = dao.updatehospital(id, hospital);
-		if (dbhospital != null) {
-			ResponseStructure<Hospital> responseStructure=new ResponseStructure<>();
-			responseStructure.setMessage("succesfully updated");
-			responseStructure.setStatus(HttpStatus.OK.value());
-			responseStructure.setData(dbhospital);
-			return new ResponseEntity<ResponseStructure<Hospital>>(responseStructure,HttpStatus.OK);
-		} else {
-			throw new IdNotFoundException("id not found for hospital");
-		}
-
+	public Hospital updateHospital(int id, Hospital hospital) {
+		return dao.updatehospital(id, hospital)
+				.orElseThrow(() ->
+						new IdNotFoundException("Hospital not found for the id " + id));
 	}
 
-	public ResponseEntity<ResponseStructure<Hospital>> deleteHospital(int id) {
-		Hospital hospital = dao.deletehospital(id);
-		if (hospital != null) {
-			ResponseStructure<Hospital> responseStructure=new ResponseStructure<>();
-			responseStructure.setMessage("deleted succesfully");
-			responseStructure.setStatus(HttpStatus.OK.value());
-			responseStructure.setData(hospital);
-			return new ResponseEntity<ResponseStructure<Hospital>>(responseStructure,HttpStatus.OK);
-		} else {
-			throw new IdNotFoundException("id not found for given hospital id");
-		}
-
+	public Hospital deleteHospital(int id) {
+		return dao.deletehospital(id)
+				.orElseThrow(() ->
+						new IdNotFoundException("Hospital not found for the id " + id));
 	}
 
-	public ResponseEntity<ResponseStructure<Hospital>> getHospitalbyid(int id) {
-		Hospital hospital = dao.gethospitalbyid(id);
-		if (hospital != null) {
-			ResponseStructure<Hospital> responseStructure=new ResponseStructure<>();
-			responseStructure.setMessage("succesfully found");
-			responseStructure.setStatus(HttpStatus.FOUND.value());
-			responseStructure.setData(hospital);
-			return new ResponseEntity<ResponseStructure<Hospital>>(responseStructure,HttpStatus.FOUND);
-		} else {
-			throw new NoSuchElementException("no id found");
-		}
-
+	public Hospital getHospitalbyid(int id) {
+		return dao.gethospitalbyid(id)
+				.orElseThrow(() ->
+						new IdNotFoundException("Hospital not found for the id " + id));
 	}
 
 	public Hospital gethospitalbyemail(String email) {
-		Hospital hospital = dao.gethospitalbyemail(email);
-		if (hospital != null) {
-			return hospital;
-		} else {
-			return null;
+		return dao.gethospitalbyemail(email)
+				.orElseThrow(() ->
+						new IdNotFoundException("Hospital not found for the email " + email));
+	}
+
+
+
+	public List<Hospital> getAllHospital(int page, int size, String direction) {
+		Sort sort = direction.equalsIgnoreCase("desc")?
+				Sort.by("name").descending():
+				Sort.by("name").ascending();
+
+		Pageable pageable= PageRequest.of(page,size,sort);
+		Page<Hospital> hospitalPage=dao.getAllHospitals(pageable);
+
+		if (hospitalPage.isEmpty()) {
+			throw new IdNotFoundException("No hospitals found");
 		}
+
+		return hospitalPage.getContent();
+
 
 	}
 }

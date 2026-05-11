@@ -1,10 +1,14 @@
 package com.ty.HospitalManagementSystem.dao;
 
-
-import com.ty.HospitalManagementSystem.dto.Branch;
+import com.ty.HospitalManagementSystem.Entity.Address;
+import com.ty.HospitalManagementSystem.Entity.Branch;
+import com.ty.HospitalManagementSystem.Entity.Hospital;
+import com.ty.HospitalManagementSystem.exception.IdNotFoundException;
 import com.ty.HospitalManagementSystem.repo.BranchRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class Branchdao {
@@ -18,51 +22,55 @@ public class Branchdao {
 	@Autowired
 	private Addressdao addressdao;
 
+	// SAVE
 	public Branch saveBranch(int hid, int aid, Branch branch) {
-	//	Hospital hospital = hospitalDao.gethospitalbyid(hid);
-	//	branch.setHospital(hospital);
-	//	Address address = addressdao.getaddressbyid(aid);
-	//	branch.setAddress(address);
+
+		Hospital hospital = hospitalDao.gethospitalbyid(hid);
+
+		Address address = addressdao.getaddressbyid(aid);
+
+		branch.setHospital(hospital);
+		branch.setAddress(address);
+
 		return branchRepo.save(branch);
-
 	}
 
+	// UPDATE
 	public Branch updateBranch(int id, Branch branch) {
-		Branch dbbranch = branchRepo.findById(id).get();
-		if (dbbranch != null) {
-			branch.setId(id);
-			branch.setHospital(dbbranch.getHospital());
-			branch.setAddress(dbbranch.getAddress());
-			return branchRepo.save(branch);
-		} else {
-			return null;
 
-		}
+		Branch existing = branchRepo.findById(id)
+				.orElseThrow(() ->
+						new IdNotFoundException("Branch not found for id " + id));
+
+		branch.setId(existing.getId());
+		branch.setHospital(existing.getHospital());
+		branch.setAddress(existing.getAddress());
+
+		return branchRepo.save(branch);
 	}
 
+	// DELETE
 	public Branch deleteBranch(int id) {
-		if (branchRepo.findById(id).isPresent()) {
-			Branch branch = branchRepo.findById(id).get();
-			branchRepo.deleteById(id);
-			return branch;
 
-		} else {
-			return null;
-		}
+		Branch branch = branchRepo.findById(id)
+				.orElseThrow(() ->
+						new IdNotFoundException("Branch not found for id " + id));
+
+		branchRepo.delete(branch);
+		return branch;
 	}
 
+	// GET BY ID
 	public Branch getbranchbyid(int id) {
-		if (branchRepo.findById(id).isPresent()) {
-			return branchRepo.findById(id).get();
-		} else {
-			return null;
-		}
 
+		return branchRepo.findById(id)
+				.orElseThrow(() ->
+						new IdNotFoundException("Branch not found for id " + id));
 	}
 
-//	public List<Branch> getbranchbyhospitalid(int hid) {
-//		//Hospital hospital = hospitalDao.gethospitalbyid(hid);
-//		//return branchRepo.findBranchByHospitalId(hospital);
-//
-//	}
+	// GET BY HOSPITAL ID
+	public List<Branch> getbranchbyhospitalid(int hid) {
+
+		return branchRepo.findByHospital(hid);
+	}
 }

@@ -1,13 +1,11 @@
 package com.ty.HospitalManagementSystem.dao;
 
-import com.ty.HospitalManagementSystem.dto.Hospital;
+import com.ty.HospitalManagementSystem.Entity.Hospital;
 import com.ty.HospitalManagementSystem.repo.HospitalRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public class HospitalDao {
@@ -19,35 +17,36 @@ public class HospitalDao {
 		return hospitalRepo.save(hospital);
 	}
 
-	public Optional<Hospital> updatehospital(int id, Hospital hospital) {
-		return hospitalRepo.findById(id).map(existingHospital->
-		{
+	public Hospital updatehospital(int id, Hospital hospital) {
+		Hospital existingHospital = hospitalRepo.findById(id).orElse(null);
+
+		if (existingHospital != null) {
 			existingHospital.setName(hospital.getName());
 			existingHospital.setEmail(hospital.getEmail());
 			return hospitalRepo.save(existingHospital);
-
-		});
+		}
+		return null;
 	}
 
-	public Optional<Hospital> deletehospital(int id) {
-		return hospitalRepo.findById(id).map(hospital->{
+	public Hospital deletehospital(int id) {
+		Hospital hospital = hospitalRepo.findById(id).orElse(null);
+
+		if (hospital != null) {
 			hospitalRepo.delete(hospital);
 			return hospital;
-
-		});
+		}
+		return null;
 	}
 
-	public Optional<Hospital> gethospitalbyid(int id) {
-		return hospitalRepo.findById(id);
+	public Hospital gethospitalbyid(int id) {
+		return hospitalRepo.findById(id).orElse(null);
+	}
+
+	public Hospital gethospitalbyemail(String email) {
+		return hospitalRepo.findhospitalbyemail(email);
 	}
 
 	public Page<Hospital> getAllHospitals(Pageable pageable) {
 		return hospitalRepo.findAll(pageable);
 	}
-
-	public Optional<Hospital> gethospitalbyemail(String email) {
-		return Optional.ofNullable(hospitalRepo.findhospitalbyemail(email));
-	}
-
-
 }

@@ -3,7 +3,7 @@ package com.ty.HospitalManagementSystem.repo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.ty.HospitalManagementSystem.dto.Hospital;
+import com.ty.HospitalManagementSystem.Entity.Hospital;
 
 public interface HospitalRepo extends JpaRepository<Hospital, Integer>{
 

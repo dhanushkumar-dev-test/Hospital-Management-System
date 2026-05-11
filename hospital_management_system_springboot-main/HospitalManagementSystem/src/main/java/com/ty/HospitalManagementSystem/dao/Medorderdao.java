@@ -3,8 +3,8 @@ package com.ty.HospitalManagementSystem.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.ty.HospitalManagementSystem.dto.Encounter;
-import com.ty.HospitalManagementSystem.dto.Medorder;
+import com.ty.HospitalManagementSystem.Entity.Encounter;
+import com.ty.HospitalManagementSystem.Entity.Medorder;
 import com.ty.HospitalManagementSystem.repo.MedOrderRepo;
 
 @Repository
@@ -17,7 +17,7 @@ public class Medorderdao {
 	private Encounterdao encounterdao;
 	
 	public Medorder saveMedorder(Medorder medorder,int eid) {
-		Encounter encounter=encounterdao.getencounterbyid(eid);
+		Encounter encounter=encounterdao.getEncounterById(eid);
 		medorder.setEncounter(encounter);
 		return medOrderRepo.save(medorder);
 		

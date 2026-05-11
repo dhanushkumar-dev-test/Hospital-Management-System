@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ty.HospitalManagementSystem.dao.Medorderdao;
-import com.ty.HospitalManagementSystem.dto.Medorder;
+import com.ty.HospitalManagementSystem.Entity.Medorder;
 
 @Service
-public class MedOrdrService {
+public class MedOrderService {
 
 	@Autowired
 	private Medorderdao medorderdao;

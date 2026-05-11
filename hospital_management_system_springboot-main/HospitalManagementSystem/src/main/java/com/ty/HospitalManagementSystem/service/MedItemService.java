@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ty.HospitalManagementSystem.dao.MedItemsdao;
-import com.ty.HospitalManagementSystem.dto.MedItems;
+import com.ty.HospitalManagementSystem.Entity.MedItems;
 
 @Service
 public class MedItemService {

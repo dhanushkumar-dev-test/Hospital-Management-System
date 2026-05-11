@@ -1,6 +1,6 @@
 package com.ty.HospitalManagementSystem.controller;
 
-import com.ty.HospitalManagementSystem.dto.Address;
+import com.ty.HospitalManagementSystem.Entity.Address;
 import com.ty.HospitalManagementSystem.service.AddressService;
 import com.ty.HospitalManagementSystem.util.ResponseStructure;
 

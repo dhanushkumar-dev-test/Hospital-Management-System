@@ -1,6 +1,6 @@
 package com.ty.HospitalManagementSystem.controller;
 
-import com.ty.HospitalManagementSystem.dto.Hospital;
+import com.ty.HospitalManagementSystem.Entity.Hospital;
 import com.ty.HospitalManagementSystem.service.HospitalService;
 import com.ty.HospitalManagementSystem.util.ResponseStructure;
 import io.swagger.v3.oas.annotations.Operation;

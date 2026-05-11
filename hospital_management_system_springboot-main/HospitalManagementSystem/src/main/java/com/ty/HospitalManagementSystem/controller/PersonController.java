@@ -1,6 +1,6 @@
 package com.ty.HospitalManagementSystem.controller;
 
-import com.ty.HospitalManagementSystem.dto.Person;
+import com.ty.HospitalManagementSystem.Entity.Person;
 import com.ty.HospitalManagementSystem.service.PersonService;
 import com.ty.HospitalManagementSystem.util.ResponseStructure;
 
@@ -89,7 +89,7 @@ public class PersonController {
 			@Parameter(description = "Person ID", required = true)
 			@PathVariable int id) {
 
-		Person person = service.getpersonbyid(id);
+		Person person = service.getPersonById(id);
 
 		ResponseStructure<Person> response = new ResponseStructure<>();
 		response.setStatus(200);

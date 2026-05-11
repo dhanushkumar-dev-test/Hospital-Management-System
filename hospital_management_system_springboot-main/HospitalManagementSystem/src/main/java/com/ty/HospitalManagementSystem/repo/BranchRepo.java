@@ -1,17 +1,16 @@
 package com.ty.HospitalManagementSystem.repo;
 
-import java.util.List;
-
+import com.ty.HospitalManagementSystem.Entity.Branch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.ty.HospitalManagementSystem.dto.Branch;
-import com.ty.HospitalManagementSystem.dto.Hospital;
+import java.util.List;
 
 public interface BranchRepo extends JpaRepository<Branch, Integer>{
 
-	@Query("select b from Branch b where b.hospital=?1")
-	public List<Branch> findBranchByHospitalId(Hospital hospital) ;
+	@Query("select b from Branch b where b.hospital.id=?1")
+	List<Branch> findByHospital(int hid);
+
 		
 	
 }

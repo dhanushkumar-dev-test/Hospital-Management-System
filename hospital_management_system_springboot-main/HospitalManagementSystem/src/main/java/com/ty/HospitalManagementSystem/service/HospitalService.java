@@ -1,13 +1,10 @@
 package com.ty.HospitalManagementSystem.service;
 
 import com.ty.HospitalManagementSystem.dao.HospitalDao;
-import com.ty.HospitalManagementSystem.dto.Hospital;
+import com.ty.HospitalManagementSystem.Entity.Hospital;
 import com.ty.HospitalManagementSystem.exception.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,45 +20,54 @@ public class HospitalService {
 	}
 
 	public Hospital updateHospital(int id, Hospital hospital) {
-		return dao.updatehospital(id, hospital)
-				.orElseThrow(() ->
-						new IdNotFoundException("Hospital not found for the id " + id));
+		Hospital updated = dao.updatehospital(id, hospital);
+
+		if (updated == null) {
+			throw new IdNotFoundException("Hospital not found for id " + id);
+		}
+		return updated;
 	}
 
 	public Hospital deleteHospital(int id) {
-		return dao.deletehospital(id)
-				.orElseThrow(() ->
-						new IdNotFoundException("Hospital not found for the id " + id));
+		Hospital deleted = dao.deletehospital(id);
+
+		if (deleted == null) {
+			throw new IdNotFoundException("Hospital not found for id " + id);
+		}
+		return deleted;
 	}
 
 	public Hospital getHospitalbyid(int id) {
-		return dao.gethospitalbyid(id)
-				.orElseThrow(() ->
-						new IdNotFoundException("Hospital not found for the id " + id));
+		Hospital hospital = dao.gethospitalbyid(id);
+
+		if (hospital == null) {
+			throw new IdNotFoundException("Hospital not found for id " + id);
+		}
+		return hospital;
 	}
 
 	public Hospital gethospitalbyemail(String email) {
-		return dao.gethospitalbyemail(email)
-				.orElseThrow(() ->
-						new IdNotFoundException("Hospital not found for the email " + email));
+		Hospital hospital = dao.gethospitalbyemail(email);
+
+		if (hospital == null) {
+			throw new IdNotFoundException("Hospital not found for email " + email);
+		}
+		return hospital;
 	}
 
-
-
 	public List<Hospital> getAllHospital(int page, int size, String direction) {
-		Sort sort = direction.equalsIgnoreCase("desc")?
-				Sort.by("name").descending():
-				Sort.by("name").ascending();
 
-		Pageable pageable= PageRequest.of(page,size,sort);
-		Page<Hospital> hospitalPage=dao.getAllHospitals(pageable);
+		Sort sort = direction.equalsIgnoreCase("desc")
+				? Sort.by("name").descending()
+				: Sort.by("name").ascending();
+
+		Pageable pageable = PageRequest.of(page, size, sort);
+		Page<Hospital> hospitalPage = dao.getAllHospitals(pageable);
 
 		if (hospitalPage.isEmpty()) {
 			throw new IdNotFoundException("No hospitals found");
 		}
 
 		return hospitalPage.getContent();
-
-
 	}
 }

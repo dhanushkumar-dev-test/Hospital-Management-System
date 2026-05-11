@@ -1,9 +1,12 @@
 package com.ty.HospitalManagementSystem.service;
 
 import com.ty.HospitalManagementSystem.dao.Branchdao;
-import com.ty.HospitalManagementSystem.dto.Branch;
+import com.ty.HospitalManagementSystem.Entity.Branch;
+import com.ty.HospitalManagementSystem.exception.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class BranchService {
@@ -11,48 +14,41 @@ public class BranchService {
 	@Autowired
 	private Branchdao branchdao;
 
+	// SAVE
 	public Branch saveBranch(int hid, int aid, Branch branch) {
+
 		return branchdao.saveBranch(hid, aid, branch);
-
 	}
 
+	// UPDATE
 	public Branch updateBranch(int id, Branch branch) {
-		Branch dbbranch = branchdao.updateBranch(id, branch);
-		if (dbbranch != null) {
-			return dbbranch;
-		} else {
-			return null;
-		}
 
+		return branchdao.updateBranch(id, branch);
 	}
 
+	// DELETE
 	public Branch deleteBranch(int id) {
-		Branch branch = branchdao.deleteBranch(id);
-		if (branch != null) {
-			return branch;
-		} else {
-			return null;
-		}
 
+		return branchdao.deleteBranch(id);
 	}
 
+	// GET BY ID
 	public Branch getbranchbyid(int id) {
-		Branch branch = branchdao.getbranchbyid(id);
-		if (branch != null) {
-			return branch;
-		} else {
-			return null;
+
+		return branchdao.getbranchbyid(id);
+	}
+
+	// GET BY HOSPITAL ID
+	public List<Branch> getbranchbyhospitalid(int hid) {
+
+		List<Branch> branches =
+				branchdao.getbranchbyhospitalid(hid);
+
+		if (branches != null && !branches.isEmpty()) {
+			return branches;
 		}
 
+		throw new IdNotFoundException(
+				"No branches found for Hospital ID " + hid);
 	}
-
-//	public List<Branch> getbranchbyhospitalid(int hid) {
-//		List<Branch> branchs = branchdao.getbranchbyhospitalid(hid);
-//		if (branchs != null) {
-//			return branchs;
-//		} else {
-//			return null;
-//		}
-
-	}
-
+}

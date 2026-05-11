@@ -3,8 +3,8 @@ package com.ty.HospitalManagementSystem.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.ty.HospitalManagementSystem.dto.MedItems;
-import com.ty.HospitalManagementSystem.dto.Medorder;
+import com.ty.HospitalManagementSystem.Entity.MedItems;
+import com.ty.HospitalManagementSystem.Entity.Medorder;
 import com.ty.HospitalManagementSystem.repo.MedItemRepo;
 
 @Repository

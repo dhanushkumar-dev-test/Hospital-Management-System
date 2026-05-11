@@ -1,7 +1,7 @@
 package com.ty.HospitalManagementSystem.service;
 
 import com.ty.HospitalManagementSystem.dao.Addressdao;
-import com.ty.HospitalManagementSystem.dto.Address;
+import com.ty.HospitalManagementSystem.Entity.Address;
 import com.ty.HospitalManagementSystem.exception.IdNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
